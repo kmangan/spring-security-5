@@ -1,0 +1,51 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("net.ltgt.gradle:gradle-apt-plugin:0.13")
+    }
+}
+
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'net.ltgt.apt'
+
+group = 'com.kieranmangan'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    apt('org.projectlombok:lombok:1.16.20')
+    compileOnly('org.projectlombok:lombok:1.16.20')
+
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.security:spring-security-jwt:1.0.9.RELEASE')
+    compile('org.springframework.security.oauth:spring-security-oauth2:2.3.3.RELEASE')
+
+    compile('org.apache.commons:commons-lang3:3.5')
+    compile('com.google.guava:guava:23.5-jre')
+    compile('org.liquibase:liquibase-core')
+    compile('org.hibernate:hibernate-java8')
+
+    compile('com.h2database:h2')
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.security:spring-security-test')
+}
