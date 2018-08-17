@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class OAuth2SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
