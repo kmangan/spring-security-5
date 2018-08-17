@@ -1,25 +1,10 @@
-spring.jpa.hibernate.ddl-auto: validate
 
 spring:
+  jpa.hibernate.ddl-auto: validate
   liquibase.change-log: classpath:liquibase-changeLog.xml
-  application.name: auth
+  application.name: spring-security-5
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
     username: sa
     password: sa
-
-# Disable all the actuator endpoints, but leave a healthcheck
-endpoints:
-  enabled: false
-  health.enabled: true
-
-# For production systems, ensure this key is of an adequate cryptographic strength
-# @see https://auth0.com/blog/brute-forcing-hs256-is-possible-the-importance-of-using-strong-keys-to-sign-jwts/
-jwtSigningKey: abc123
-
----
-spring:
-  profiles: dev # Add config for different profiles here if you want. To activate, simply start the app with --spring.profiles.active=dev
-
-logging.level.com.kieranmangan: INFO

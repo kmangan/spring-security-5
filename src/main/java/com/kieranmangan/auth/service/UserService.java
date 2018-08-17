@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -21,12 +22,12 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void save(UserForm form) {
+    public UUID save(UserForm form) {
         User user = User.builder()
-                .id(form.getId())
+                .id(UUID.randomUUID())
                 .username(form.getUsername())
                 // Spring Security 5 uses BCrypt by default, which has a default 'strength' of 10. This is good enough for most enterprise implementations.
-                // If you increase the strength the encoding time will increase exponentially.
+                // If you increase the strength the encoding, the encoding time will increase exponentially.
                 .password(passwordEncoder.encode(form.getPassword()))
                 // It's a requirement of Spring Security OAuth2 to have at least one authority.
                 // In this case we simply have one authority called 'all'.
@@ -37,5 +38,6 @@ public class UserService {
                                 .build()))
                 .build();
         userRepository.save(user);
+        return user.getId();
     }
 }

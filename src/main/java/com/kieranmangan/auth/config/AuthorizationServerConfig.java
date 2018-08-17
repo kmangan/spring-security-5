@@ -1,7 +1,6 @@
 package com.kieranmangan.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -25,9 +24,6 @@ import java.util.Collections;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-
-    @Value("${jwtSigningKey}")
-    private String jwtSigningKey;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -74,7 +70,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(jwtSigningKey);
+//      For production systems, ensure this key is of an adequate cryptographic strength
+//      @see https://auth0.com/blog/brute-forcing-hs256-is-possible-the-importance-of-using-strong-keys-to-sign-jwts/
+        converter.setSigningKey("abcdef");
         return converter;
     }
 

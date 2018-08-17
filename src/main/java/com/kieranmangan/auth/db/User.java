@@ -19,7 +19,7 @@ public class User {
     @Id
     @Column(columnDefinition = "varchar(50)")
     private UUID id;
-    @Column(columnDefinition = "varchar(36)")
+    @Column(columnDefinition = "varchar(36)") // TODO - This is needed to stop hibernate complaining. Why?
     private String username;
     private String password;
 

@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +38,7 @@ public class AuthApplicationTests {
         // Given - a user
         mvc.perform(
                 post("/user")
-                        .content(objectMapper.writeValueAsBytes(UserForm.builder().id(UUID.randomUUID()).username("user1@testing.com").password("password").build()))
+                        .content(objectMapper.writeValueAsBytes(UserForm.builder().username("user1@testing.com").password("password").build()))
                         .header("content-type", "application/json"))
                 .andExpect(status().isCreated());
 
@@ -54,7 +55,7 @@ public class AuthApplicationTests {
         // Given - a user
         mvc.perform(
                 post("/user")
-                        .content(objectMapper.writeValueAsBytes(UserForm.builder().id(UUID.randomUUID()).username("user2@testing.com").password("password").build()))
+                        .content(objectMapper.writeValueAsBytes(UserForm.builder().username("user2@testing.com").password("password").build()))
                         .header("content-type", "application/json"))
                 .andExpect(status().isCreated());
 
@@ -67,34 +68,30 @@ public class AuthApplicationTests {
 
     @Test
     public void shouldBeAbleToPersistUser() throws Exception {
-        UUID userId = UUID.randomUUID();
-        mvc.perform(
+        String responseBody = mvc.perform(
                 post("/user")
-                        .content(objectMapper.writeValueAsBytes(UserForm.builder().id(userId).username("user3@testing.com").password("password").build()))
+                        .content(objectMapper.writeValueAsBytes(UserForm.builder().username("user3@testing.com").password("password").build()))
                         .header("content-type", "application/json"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        UUID userId = UUID.fromString(objectMapper.readValue(responseBody, Map.class).get("id").toString());
 
         assertThat(userRepository.findById(userId)).isNotNull();
     }
 
     @Test
     public void shouldReturnBadRequestIfFieldsNotPresent() throws Exception {
-        // No id
-        mvc.perform(
-                post("/user")
-                        .content(objectMapper.writeValueAsBytes(UserForm.builder().username("user4@testing.com").password("password").build()))
-                        .header("content-type", "application/json"))
-                .andExpect(status().isBadRequest());
         // No username
         mvc.perform(
                 post("/user")
-                        .content(objectMapper.writeValueAsBytes(UserForm.builder().id(UUID.randomUUID()).password("password").build()))
+                        .content(objectMapper.writeValueAsBytes(UserForm.builder().password("password").build()))
                         .header("content-type", "application/json"))
                 .andExpect(status().isBadRequest());
         // No password
         mvc.perform(
                 post("/user")
-                        .content(objectMapper.writeValueAsBytes(UserForm.builder().id(UUID.randomUUID()).username("user5@testing.com").build()))
+                        .content(objectMapper.writeValueAsBytes(UserForm.builder().username("user5@testing.com").build()))
                         .header("content-type", "application/json"))
                 .andExpect(status().isBadRequest());
     }
